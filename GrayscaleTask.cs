@@ -23,6 +23,7 @@
 			var jober = new double[original.GetLength(0), original.GetLength(1)];
 			int length = original.GetLength(0);
 			int widht = original.GetLength(1);
+
 			for (int i = 0; i < length; i++)
 				for (int j = 0; j < widht; j++)
                 {

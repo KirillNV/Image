@@ -1,29 +1,26 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Recognizer
 {
 	internal static class MedianFilterTask
 	{
-		/* 
-		 * Для борьбы с пиксельным шумом, подобным тому, что на изображении,
-		 * обычно применяют медианный фильтр, в котором цвет каждого пикселя, 
-		 * заменяется на медиану всех цветов в некоторой окрестности пикселя.
-		 * https://en.wikipedia.org/wiki/Median_filter
-		 * 
-		 * Используйте окно размером 3х3 для не граничных пикселей,
-		 * Окно размером 2х2 для угловых и 3х2 или 2х3 для граничных.
-		 */
 		public static double[,] MedianFilter(double[,] original)
 		{
 			var jober = new double[original.GetLength(0), original.GetLength(1)];
 			int length = original.GetLength(0);
 			int widht = original.GetLength(1);
 
-			for (int i = 1; i < length - 1; i++)
-				for (int j = 1; j < widht - 1; j++)
+
+			for (int i = 0; i < length; i++)
+				for (int j = 0; j < widht; j++)
 				{
-					var array = new double[] { original[i - 1, j - 1], original[i - 1, j], original[i - 1, j + 1], original[i, j - 1], original[i, j], original[i, j + 1], original[i + 1, j - 1], original[i + 1, j], original[i + 1, j + 1]};
-					jober[i, j] = SortMedian(array);
+					var list = new List<double>();
+					for (int k = - 1; k < 2; k++)
+						for (int p = - 1; p < 2; p++)
+							try { list.Add(original[i + k, j + p]); } catch { }
+					
+					jober[i, j] = SortMedian(list.ToArray());
 				}
 			return jober;
 		}
@@ -34,14 +31,14 @@ namespace Recognizer
 			if(pixelMedian.Length % 2 == 0)
             {
 				var median = SortBubble(pixelMedian);
-				int leftElement = (int)((median.Length / 2) - 0.4);
-				int rightElement = (int)((median.Length / 2) - 0.4);
+				int leftElement = (int)((median.Length / 2) - 0.5);
+				int rightElement = (int)((median.Length / 2) + 0.5);
 				return (median[leftElement] + median[rightElement]) / 2;
 			}
             else 
 			{
 				var median = SortBubble(pixelMedian);
-				int midleElement = (int)((median.Length / 2) - 0.1);
+				int midleElement = (int)((median.Length / 2.0) - 0.1);
 				return median[midleElement];
 			}	
 		}

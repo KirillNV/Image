@@ -9,10 +9,7 @@ namespace Recognizer
             var width = g.GetLength(0);
             var height = g.GetLength(1);
             var widthSx = sx.GetLength(0);
-            var heightSx = sx.GetLength(1);
-
             var result = new double[width, height];
-
             int shiftMatrix = (int)(sx.GetLength(0) / 2.0);
 
 
@@ -30,16 +27,13 @@ namespace Recognizer
 
         public static double[,] TranspositionMatrix(double[,] matrix)
         {
-            int width = matrix.GetLength(0);
-            int height = matrix.GetLength(1);
-
-            double[,] finishedMatrix = new double[width, height];
-            for (int x = width; x > 0; x--)
-                for (int y = height; y > 0; y--)
-                {
-                    finishedMatrix[width - x, height - y] = matrix[x - 1, y - 1];
-                }
-            return finishedMatrix;
+            var n = matrix.GetUpperBound(0) + 1;
+            var m = matrix.GetUpperBound(1) + 1;
+            var result = new double[m, n];
+            for (var i = 0; i < n; i++)
+                for (var j = 0; j < m; j++)
+                    result[j, i] = matrix[i, j];
+            return result;
         }
 
         public static double SumingMatrix(double[,] matrix)
